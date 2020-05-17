@@ -1,6 +1,11 @@
 from graphics import *
 from time import sleep
 import random
+import importlib 
+
+p1Bot = importlib.import_module(sys.argv[1])
+p2Bot = importlib.import_module(sys.argv[2])
+
 windowWidth = 1000
 windowHeight = 800
 
@@ -74,30 +79,33 @@ def updateBall():
     return True
 
 def moveP1(direction):
-    if(direction > playerSpeed or direction < -playerSpeed):
-        p1Move[0] = (playerSpeed, -playerSpeed)[direction < 0]
-    else:
-        p1Move[0] = direction
-
+    p1MoveRaw = p2Bot.move(ballPos, p1Pos, p2Pos, playerSpeed)
+    p1Move[0] = makeLegal(p1MoveRaw, p2Pos)
+    
 def moveP2(direction):
-    if(direction > playerSpeed or direction < -playerSpeed):
-        p2Move[0] = (playerSpeed, -playerSpeed)[direction < 0]
-    else:
-        p2Move[0] = direction
+    p2MoveRaw = p2Bot.move(ballPos, p2Pos, p1Pos, playerSpeed)
+    p2Move[0] = makeLegal(p2MoveRaw, p2Pos)
+
+
+def makeLegal(move, playerPos):
+    if(move == None):
+        return 0
+    if(move < 0 and playerPos[1] + move - playerDimensions[1]/2 < 0):
+        return 0
+    if(move > 0 and playerPos[1] + move + playerDimensions[1]/2 > windowHeight):
+        return 0
+    if(move > playerSpeed):
+        return playerSpeed
+    if(move < -playerSpeed):
+        return -playerSpeed
+    return move
+
 
 def updatePlayer1():
-    if(p1Move[0] < 0 and p1Pos[1] + p1Move[0] - playerDimensions[1]/2 < 0):
-        return
-    if(p1Move[0] > 0 and p1Pos[1] + p1Move[0] + playerDimensions[1]/2 > windowHeight):
-        return
     p1Pos[1] += p1Move[0]
     p1Rect.move(0,p1Move[0])
             
 def updatePlayer2():
-    if(p2Move[0] < 0 and p2Pos[1] + p2Move[0] - playerDimensions[1]/2 < 0):
-        return
-    if(p2Move[0] > 0 and p2Pos[1] + p2Move[0] + playerDimensions[1]/2 > windowHeight):
-        return
     p2Pos[1] += p2Move[0]
     p2Rect.move(0,p2Move[0])
 
