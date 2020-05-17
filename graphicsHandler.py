@@ -79,11 +79,11 @@ def updateBall():
     return True
 
 def moveP1(direction):
-    p1MoveRaw = p2Bot.move(ballPos, p1Pos, p2Pos, playerSpeed)
+    p1MoveRaw = p2Bot.move(ballPos, ballVec, p1Pos, p2Pos, playerSpeed)
     p1Move[0] = makeLegal(p1MoveRaw, p2Pos)
     
 def moveP2(direction):
-    p2MoveRaw = p2Bot.move(ballPos, p2Pos, p1Pos, playerSpeed)
+    p2MoveRaw = p2Bot.move(ballPos, ballVec, p2Pos, p1Pos, playerSpeed)
     p2Move[0] = makeLegal(p2MoveRaw, p2Pos)
 
 
